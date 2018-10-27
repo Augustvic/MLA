@@ -76,7 +76,7 @@ def hierarchical(data, k):
 
 
 
-filename = r"C:\Users\August\August's Documents\MachineLearningWatermelon\Watermelon4.txt"
+filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\dataset\Watermelon\Watermelon4.txt"
 dataset = loadData(filename)
 res = hierarchical(dataset, 5)
 
