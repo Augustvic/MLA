@@ -3,5 +3,3 @@ from re import split
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-
-print(round(3.5))
