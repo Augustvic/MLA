@@ -8,6 +8,8 @@ from re import split
 import numpy as np
 import math
 import copy
+import os.path
+from time import strftime, localtime, time
 
 
 class TreeNode(object):
@@ -22,19 +24,12 @@ class KNN(object):
     def __init__(self):
         all_data_file_path = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\Iris.txt"
         self.all_data = self.load_data(all_data_file_path)
-        # trainFilePath = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\train.txt"
-        # self.train = self.load_data(trainFilePath)
-        #test_file_path = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\test.txt"
-        #self.test = self.load_data(test_file_path)
-        self.train = [np.array([2, 3]).astype(float),
-                      np.array([5, 4]).astype(float),
-                      np.array([9, 6]).astype(float),
-                      np.array([4, 7]).astype(float),
-                      np.array([8, 1]).astype(float),
-                      np.array([7, 2]).astype(float)]
-        self.test = [np.array([6, 3]).astype(float)]
-
-        self.k = 2
+        trainFilePath = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\train.txt"
+        self.train = self.load_data(trainFilePath)
+        test_file_path = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\test.txt"
+        self.test = self.load_data(test_file_path)
+        self.k = 5
+        self.num2labels = {0: 'Iris-setosa', 1: 'Iris-versicolor', 2: 'Iris-virginica'}
 
     def load_data(self, filename):
         labels = {'Iris-setosa': '0', 'Iris-versicolor': '1', 'Iris-virginica': '2'}
@@ -133,9 +128,52 @@ class KNN(object):
                 max_dist = curr_dist
         return max_dist
 
+    def vote(self, neighbors):
+        dic = {'Iris-setosa': 0, 'Iris-versicolor': 0, 'Iris-virginica': 0}
+        for tmp in neighbors:
+            hyp = tmp[4]
+            dic[self.num2labels[hyp]] += 1
+        return max(dic, key=dic.get)
+
+    def eval_predict(self, res):
+        # output to file
+        predict = []
+        for tmp in res:
+            sepal_length, sepal_width, petal_length, petal_width, value = tmp[0]
+            pred = tmp[1]
+            predict.append(str(sepal_length) + ',' + str(sepal_width) + ',' + str(petal_length) + ',' + str(petal_width)
+                           + ',' + str(self.num2labels[value]) + ',' + str(pred) + '\n')
+        out_path = "../Result/"
+        current_time = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
+        out_filename = "KNN_Predict_for_Iris" + "@" + current_time + ".txt"
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+        with open(out_path + out_filename, 'w') as f:
+            f.writelines(predict)
+        print("The predict result has been output to ..\Dataset\Result")
+        # evaluation
+        print("HITS = " + str(self.hit(res) * 100) + "%")
+
+    def hit(self, res):
+        num = 0
+        hits = 0
+        for tmp in res:
+            value = self.num2labels[tmp[0][4]]
+            pred = tmp[1]
+            if value == pred:
+                hits += 1
+            num += 1
+        return hits / num
+
     def execute(self):
         root = self.build_kd_tree(0, 0, len(self.train) - 1)    # Build KD Tree
+        res = []
         for e in self.test:
             neighbors = []
             self.search_knn(root, e, neighbors)
-            print(neighbors)
+            hypothesis = self.vote(neighbors)
+            tmp = []
+            tmp.append(e)
+            tmp.append(hypothesis)
+            res.append(tmp)
+        self.eval_predict(res)
