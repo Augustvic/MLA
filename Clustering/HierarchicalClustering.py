@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class HierarchicalClustering(object):
     def __init__(self):
-        filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\dataset\Watermelon\Watermelon4.txt"
+        filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon4.txt"
         self.dataset = self.load_data(filename)
 
     # Read sample set from Watermelon4.txt

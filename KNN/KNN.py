@@ -24,8 +24,8 @@ class KNN(object):
     def __init__(self):
         all_data_file_path = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\Iris.txt"
         self.all_data = self.load_data(all_data_file_path)
-        trainFilePath = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\train.txt"
-        self.train = self.load_data(trainFilePath)
+        train_file_path = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\train.txt"
+        self.train = self.load_data(train_file_path)
         test_file_path = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Iris\test.txt"
         self.test = self.load_data(test_file_path)
         self.k = 5

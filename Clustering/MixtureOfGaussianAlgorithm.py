@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class MixtureOfGaussianAlgorithm(object):
     def __init__(self):
-        filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\dataset\Watermelon\Watermelon4.txt"
+        filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon4.txt"
         self.data = self.load_data(filename)
 
         self.iter = 50

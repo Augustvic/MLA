@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 class DensityBasedClustering(object):
     def __init__(self):
-        filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\dataset\Watermelon\Watermelon4.txt"
+        filename = r"C:\Users\August\PycharmProjects\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon4.txt"
         self.data = self.load_data(filename)
         self.para = [0.11, 5]
 

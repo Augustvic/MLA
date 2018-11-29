@@ -1,0 +1,31 @@
+﻿Watermelon2c
+Language:Chinese
+Attribute Information:
+1.编号
+2.色泽
+3.根蒂
+4.敲声
+5.纹理
+6.脐部
+7.触感
+8.密度
+9.含糖率
+10.好瓜
+
+Watermelon2e
+Attribute Information:
+1.No.
+2.color
+3.root
+4.knock
+5.pattern
+6.umbilicus
+7.touch
+8.density
+9.sugar
+10.tag
+Label:
+属性	色泽	根蒂	敲声	纹理	脐部	触感
+1	青绿	蜷缩	浊响	清晰	凹陷	硬滑
+2	乌黑	稍蜷	沉闷	稍糊	稍凹	软粘
+3	浅白	硬挺	清脆	模糊	平坦
