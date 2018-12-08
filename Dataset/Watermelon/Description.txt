@@ -13,6 +13,7 @@ Attribute Information:
 10.好瓜
 
 Watermelon2e
+Language:English
 Attribute Information:
 1.No.
 2.color

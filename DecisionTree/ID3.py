@@ -7,27 +7,29 @@
 
 import math
 from copy import deepcopy
+import os.path
+from time import strftime, localtime, time
 
 
 class ID3(object):
     def __init__(self):
- #       train_file_path = r"C:\Users\August\PycharmProjects" \
- #                         r"\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon2e_train.txt"
- #       self.train = self.load_data(train_file_path)
         train_file_path = r"C:\Users\August\PycharmProjects" \
-                          r"\MachineLearningAlgorithm\Dataset\decisiontree.txt"
+                          r"\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon2e_train.txt"
         self.train = self.load_data(train_file_path)
+#        train_file_path = r"C:\Users\August\PycharmProjects" \
+#                          r"\MachineLearningAlgorithm\Dataset\decisiontree.txt"
+#        self.train = self.load_data(train_file_path)
 
-        self.last = 4
- #      self.last = 7
+#        self.last = 4
+        self.last = 6
 
-        self.label2num = {"age": 0, "job": 1, "house": 2, "money": 3}
-        self.num2label = {0: "age", 1: "job", 2: "house", 3: "money"}
- #       test_file_path = r"C:\Users\August\PycharmProjects" \
- #                        r"\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon2e_test.txt"
- #       self.test = self.load_data(test_file_path)
-#        self.label2num = {"color": 0, "root": 1, "knock": 2, "pattern": 3, "umbilicus": 4, "touch": 5}
-#        self.num2label = {0: "color", 1: "root", 2: "knock", 3: "pattern", 4: "umbilicus", 5: "touch"}
+#        self.label2num = {"age": 0, "job": 1, "house": 2, "money": 3}
+#        self.num2label = {0: "age", 1: "job", 2: "house", 3: "money"}
+        test_file_path = r"C:\Users\August\PycharmProjects" \
+                         r"\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon2e_test.txt"
+        self.test = self.load_data(test_file_path)
+        self.label2num = {"color": 0, "root": 1, "knock": 2, "pattern": 3, "umbilicus": 4, "touch": 5}
+        self.num2label = {0: "color", 1: "root", 2: "knock", 3: "pattern", 4: "umbilicus", 5: "touch"}
 
     def load_data(self, filename):
         with open(filename) as f:
@@ -37,8 +39,8 @@ class ID3(object):
             e = []
             items = line.strip().split()
             for i in range(len(items)):
-                if i != 0:
-#                if i != 0 and i != 7 and i != 8:
+#                if i != 0:
+                if i != 0 and i != 7 and i != 8:
                     e.append(items[i])
             d.append(e)
         return d
@@ -126,8 +128,53 @@ class ID3(object):
 
         return root
 
+    def get_tag(self, root, watermelon):
+        color, root_w, knock, pattern, umbilicus, touch, tag = watermelon
+        watermelon_dict = {}
+        watermelon_dict["color"] = color
+        watermelon_dict["root"] = root_w
+        watermelon_dict["knock"] = knock
+        watermelon_dict["pattern"] = pattern
+        watermelon_dict["umbilicus"] = umbilicus
+        watermelon_dict["touch"] = touch
+        watermelon_dict["tag"] = tag
+        tmp1 = root
+        while not isinstance(tmp1, str):
+            label = list(tmp1.keys())
+            val = watermelon_dict[label[0]]
+            tmp2 = tmp1.get(label[0])
+            tmp1 = tmp2.get(val)
+        return tmp1
+
+    def hit(self, count_hit, count_test):
+        return count_hit/count_test
+
+    def eval_predict(self, root):
+        # output to file
+        predict = []
+        count_hit = 0
+        count_test = 0
+        for watermelon_test in self.test:
+            count_test += 1
+            color, root_w, knock, pattern, umbilicus, touch, tag = watermelon_test
+            pred = self.get_tag(root, watermelon_test)
+            if pred == tag:
+                count_hit += 1
+            predict.append(str(color) + ',' + str(root_w) + ',' + str(knock) + ',' + str(pattern) + ','
+                           + str(umbilicus) + ',' + str(touch) + ',' + str(pred) + ',' + str(tag) + '\n')
+        out_path = "../Result/"
+        current_time = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
+        out_filename = "ID3_Predict_for_Watermelon" + "@" + current_time + ".txt"
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+        with open(out_path + out_filename, 'w') as f:
+            f.writelines(predict)
+        print("The predict result has been output to ..\Result")
+        # evaluation
+        print("HITS = " + str(self.hit(count_hit, count_test) * 100) + "%")
+
     def execute(self):
-        labels = ["age", "job", "house", "money"]
+        labels = ["color", "root", "knock", "pattern", "umbilicus", "touch"]
         data = deepcopy(self.train)
         root = self.build_tree(data, labels)
-        print(labels)
+        self.eval_predict(root)

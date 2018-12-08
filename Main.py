@@ -17,7 +17,7 @@ if __name__ == '__main__':
     print("-------Decision Tree-------")
     print("7. ID3")
     print("-------------------------------------------------------")
-    num = input("Enter the number of the algorithm:")
+    num = input("Enter the number of the algorithm you want to execute:")
     if num == str(1):
         algorithm = KNN.KNN()
         algorithm.execute()
