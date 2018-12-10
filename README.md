@@ -1,5 +1,4 @@
-# Machine-Learning-Algorithm
-Machine learning algorithms in Python by August
+# Machine Learning Algorithm
 The following machine learning algorithms has been completed:
 1. Clustering:
    * S
