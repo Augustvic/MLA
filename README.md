@@ -7,6 +7,7 @@ The following machine learning algorithms has been completed:
  * Learning Vector Quantization
  * Mixture of Guassian Algorithm
 ## K-Nearest Neighbors
+ * KNN
 ## Decision Tree
  * ID3
  * C45
