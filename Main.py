@@ -5,6 +5,7 @@ from Clustering import KMeansAlgorithm
 from Clustering import LearningVectorQuantization
 from Clustering import MixtureOfGaussianAlgorithm
 from DecisionTree import ID3
+from DecisionTree import C45
 
 if __name__ == '__main__':
     print("1. KNN")
@@ -16,6 +17,7 @@ if __name__ == '__main__':
     print("6. Mixture of Gaussian Clustering")
     print("-------Decision Tree-------")
     print("7. ID3")
+    print("8. C4.5")
     print("-------------------------------------------------------")
     num = input("Enter the number of the algorithm you want to execute:")
     if num == str(1):
@@ -38,6 +40,9 @@ if __name__ == '__main__':
         algorithm.execute()
     elif num == str(7):
         algorithm = ID3.ID3()
+        algorithm.execute()
+    elif num == str(8):
+        algorithm = C45.C45()
         algorithm.execute()
     else:
         print("Error num!")

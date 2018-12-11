@@ -52,7 +52,6 @@ class ID3(object):
                 count[tag] = 0
             count[tag] += 1
         sorted_count = sorted(count.items(), key=lambda item: item[1])
-        print(sorted_count[-1][0])
 
     def max_information_gain(self, data, labels):
         max_gain = -1
