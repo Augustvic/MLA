@@ -157,7 +157,7 @@ class C45(object):
                            + str(umbilicus) + ',' + str(touch) + ',' + str(pred) + ',' + str(tag) + '\n')
         out_path = "../Result/"
         current_time = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
-        out_filename = "C45_Predict_for_Watermelon" + "@" + current_time + ".txt"
+        out_filename = "C45" + "@" + current_time + ".txt"
         if not os.path.exists(out_path):
             os.makedirs(out_path)
         with open(out_path + out_filename, 'w') as f:

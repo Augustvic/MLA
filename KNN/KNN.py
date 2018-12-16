@@ -145,7 +145,7 @@ class KNN(object):
                            + ',' + str(self.num2labels[value]) + ',' + str(pred) + '\n')
         out_path = "../Result/"
         current_time = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
-        out_filename = "KNN_Predict_for_Iris" + "@" + current_time + ".txt"
+        out_filename = "KNN" + "@" + current_time + ".txt"
         if not os.path.exists(out_path):
             os.makedirs(out_path)
         with open(out_path + out_filename, 'w') as f:

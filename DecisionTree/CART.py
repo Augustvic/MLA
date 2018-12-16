@@ -4,7 +4,7 @@
 # Source:李航. 统计学习方法[M]. 清华大学出版社, 2012.
 # Data Set: Watermelon2e.txt
 
-import math
+
 from copy import deepcopy
 import os.path
 from time import strftime, localtime, time
@@ -12,17 +12,30 @@ from time import strftime, localtime, time
 
 class CART(object):
     def __init__(self):
+#        train_file_path = r"C:\Users\August\PycharmProjects" \
+#                          r"\MachineLearningAlgorithm\Dataset\decisiontree.txt"
+#        self.train = self.load_data(train_file_path)
         train_file_path = r"C:\Users\August\PycharmProjects" \
-                          r"\MachineLearningAlgorithm\Dataset\decisiontree.txt"
+                          r"\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon2e_train.txt"
         self.train = self.load_data(train_file_path)
 
-        self.last = 4
+        test_file_path = r"C:\Users\August\PycharmProjects" \
+                          r"\MachineLearningAlgorithm\Dataset\Watermelon\Watermelon2e_test.txt"
+        self.test = self.load_data(test_file_path)
 
-        self.label2num = {"age": 0, "job": 1, "house": 2, "money": 3}
-        self.num2label = {0: "age", 1: "job", 2: "house", 3: "money"}
-        self.tag2num = {"no": 0, "yes":1}
-        self.num2tag = {0:"no", 1:"yes"}
-        self.labels_yes_no = [1, 2]
+#        self.last = 4
+        self.last = 6
+
+        self.label2num = {"color": 0, "root": 1, "knock": 2, "pattern": 3, "umbilicus": 4, "touch": 5}
+        self.num2label = {0: "color", 1: "root", 2: "knock", 3: "pattern", 4: "umbilicus", 5: "touch"}
+#        self.label2num = {"age": 0, "job": 1, "house": 2, "money": 3}
+#        self.num2label = {0: "age", 1: "job", 2: "house", 3: "money"}
+        self.tag2num = {"no": 0, "yes": 1}
+        self.num2tag = {0: "no", 1: "yes"}
+        self.labels_yes_no2num = {"no": 1, "yes": 2}
+        self.num2labels_yes_no = {1: "no", 2: "yes"}
+#        self.labels_yes_no = [1, 2]
+        self.labels_yes_no = [5]
 
     def load_data(self, filename):
         with open(filename) as f:
@@ -32,7 +45,8 @@ class CART(object):
             e = []
             items = line.strip().split()
             for i in range(len(items)):
-                if i != 0:
+#                if i != 0:
+                if i != 0 and i != 7 and i != 8:
                     e.append(items[i])
             d.append(e)
         return d
@@ -84,7 +98,7 @@ class CART(object):
         min_gini = 100
         for i in gini.keys():
             if i in self.labels_yes_no:
-                del gini[i][str(self.tag2num["no"])]
+                del gini[i][str(self.labels_yes_no2num["no"])]
             for j in gini[i].keys():
                 if min_gini > gini[i][j]:
                     min_label = i
@@ -113,6 +127,22 @@ class CART(object):
         if len(labels_values_remain) == 0:
             return self.majority(tags)
 
+        del_array = []
+        for num in labels_values_remain.keys():
+            count = 0
+            value_dict = {}
+            for tmp in data:
+                count += 1
+                if tmp[num] not in value_dict.keys():
+                    value_dict[tmp[num]] = 0
+                value_dict[tmp[num]] += 1
+            for value in value_dict.keys():
+                if value_dict[value] == count:
+                    del_array.append(num)
+                    break
+        for num in del_array:
+            del labels_values_remain[num]
+
         best_feature, best_feature_value = self.min_gini(data, labels_values_remain)
 
         root = {best_feature: {}}
@@ -122,16 +152,72 @@ class CART(object):
             if len(labels_values_remain[best_feature]) == 0:
                 del labels_values_remain[best_feature]
             else:
-                del labels_values_remain[best_feature][int(best_feature_value)]
+                labels_values_remain[best_feature].remove(best_feature_value)
 
         root[best_feature][best_feature_value] = self.build_tree(self.split_data(data, best_feature, best_feature_value, "false"), labels_values_remain)
         root[best_feature]["others"] = self.build_tree(self.split_data(data, best_feature, best_feature_value, "true"), labels_values_remain)
         return root
 
+    def get_tag(self, root, watermelon):
+        color, root_w, knock, pattern, umbilicus, touch, tag = watermelon
+        watermelon_dict = {}
+        watermelon_dict["color"] = color
+        watermelon_dict["root"] = root_w
+        watermelon_dict["knock"] = knock
+        watermelon_dict["pattern"] = pattern
+        watermelon_dict["umbilicus"] = umbilicus
+        watermelon_dict["touch"] = touch
+        watermelon_dict["tag"] = tag
+
+        if type(root) == str:
+            return root
+        label = list(root.keys())[0]
+        value = watermelon_dict[self.num2label[label]]
+        if type(root[label]["others"]) == str:
+            if value not in root[label].keys():
+                return root[label]["others"]
+            else:
+                return self.get_tag(root[label][value], watermelon)
+        else:
+            if value in root[label].keys():
+                return root[label][value]
+            else:
+                return self.get_tag(root[label]["others"], watermelon)
+
+    def hit(self, count_hit, count_test):
+        return count_hit/count_test
+
+    def eval_predict(self, root):
+        # output to file
+        predict = []
+        count_hit = 0
+        count_test = 0
+        for watermelon_test in self.test:
+            count_test += 1
+            color, root_w, knock, pattern, umbilicus, touch, tag = watermelon_test
+            pred = self.get_tag(root, watermelon_test)
+            if pred == tag:
+                count_hit += 1
+            predict.append(str(color) + ',' + str(root_w) + ',' + str(knock) + ',' + str(pattern) + ','
+                           + str(umbilicus) + ',' + str(touch) + ',' + str(pred) + ',' + str(tag) + '\n')
+        out_path = "../Result/"
+        current_time = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
+        out_filename = "CART" + "@" + current_time + ".txt"
+        if not os.path.exists(out_path):
+            os.makedirs(out_path)
+        with open(out_path + out_filename, 'w') as f:
+            f.writelines(predict)
+        print("The predict result has been output to ..\Result")
+        # evaluation
+        print("HITS = " + str(self.hit(count_hit, count_test) * 100) + "%")
+
     def execute(self):
-        labels_values_remain = {0: [], 1: [], 2: [], 3: []}
+        labels_values_remain = {}
+        for m in range(self.last):
+            labels_values_remain[m] = []
         for info in self.train:
             for i in range(self.last):
                 if info[i] not in labels_values_remain[i]:
                     labels_values_remain[i].append(info[i])
         root = self.build_tree(self.train, labels_values_remain)
+        self.eval_predict(root)
