@@ -12,3 +12,6 @@ The following machine learning algorithms has been completed:
  * [ID3](https://github.com/Augustvic/Machine-Learning-Algorithm/blob/master/DecisionTree/ID3.py)
  * [C45](https://github.com/Augustvic/Machine-Learning-Algorithm/blob/master/DecisionTree/C45.py)
  * [CART](https://github.com/Augustvic/Machine-Learning-Algorithm/blob/master/DecisionTree/CART.py)
+ ## Recommendation Algorithm
+ * [MF](https://github.com/Augustvic/Machine-Learning-Algorithm/blob/master/Recommendation/MF.py)
+ * [PMF](https://github.com/Augustvic/Machine-Learning-Algorithm/blob/master/Recommendation/PMF.py)
