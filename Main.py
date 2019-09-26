@@ -7,6 +7,8 @@ from Clustering import MixtureOfGaussianAlgorithm
 from DecisionTree import ID3
 from DecisionTree import C45
 from DecisionTree import CART
+from Recommendation import MF
+from Recommendation import PMF
 
 if __name__ == '__main__':
     print("1. KNN")
@@ -20,6 +22,9 @@ if __name__ == '__main__':
     print("7. ID3")
     print("8. C4.5")
     print("9. CART")
+    print("---Recommendation Algorithm---")
+    print("10. MF")
+    print("11. PMF")
     print("-------------------------------------------------------")
     num = input("Enter the number of the algorithm you want to execute:")
     if num == str(1):
@@ -48,6 +53,12 @@ if __name__ == '__main__':
         algorithm.execute()
     elif num == str(9):
         algorithm = CART.CART()
+        algorithm.execute()
+    elif num == str(10):
+        algorithm = MF.MF()
+        algorithm.execute()
+    elif num == str(11):
+        algorithm = PMF.PMF()
         algorithm.execute()
     else:
         print("Error num!")
